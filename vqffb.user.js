@@ -1,17 +1,10 @@
 // ==UserScript==
-// @name                Video Quality Fixer for X (Twitter)
-// @name:zh             X (Twitter) 视频画质修复
-// @name:zh-CN          X (Twitter) 视频画质修复
+// @name                Video Quality Fixer for Bluesky
 // @namespace           https://github.com/yuhaofe
-// @version             0.2.1
-// @description         Force highest quality playback for X (Twitter) videos.
-// @description:zh      强制 X (Twitter) 播放最高画质的视频
-// @description:zh-CN   强制 X (Twitter) 播放最高画质的视频
+// @version             0.1
+// @description         Force highest quality playback for Bluesky
 // @author              yuhaofe
-// @match               https://x.com/*
-// @match               https://mobile.x.com/*
-// @match               https://twitter.com/*
-// @match               https://mobile.twitter.com/*
+// @match               https://bsky.app/*
 // @grant               none
 // ==/UserScript==
 
@@ -19,11 +12,11 @@
     'use strict';
     initHijack();
     initUI();
-    
+
     function initHijack() {
         var realOpen = window.XMLHttpRequest.prototype.open;
         window.XMLHttpRequest.prototype.open = hijackedOpen;
-        
+
         function hijackedOpen() {
             var url = arguments['1'];
             if (isHLSPlaylist(url)) {
@@ -43,7 +36,7 @@
         };
 
         function isHLSPlaylist(url) {
-            var reg = new RegExp(/^https:\/\/video\.twimg\.com\/.+m3u8?/, 'i') ;
+            var reg = new RegExp(/^https:\/\/video\.bsky\.app\/.+m3u8?/, 'i') ;
             return reg.test(url);
         }
 
@@ -65,23 +58,23 @@
                         maxBitrateStream = stream;
                     }
                 }
-    
+
                 result = globalTags + maxBitrateStream[0];
             }
             return result;
         }
     }
-    
+
     function initUI() {
         // add a mark helps identify if userscript loaded successfully
-        var disableHQ = localStorage.getItem('vqfft-disablehq');
+        var disableHQ = localStorage.getItem('vqffb-disablehq');
         if(!disableHQ) {
             var mark = document.createElement('button');
             mark.innerText = 'HQ';
-            mark.style = "position: fixed;right: 5px;top: 5px;color: white;border-width: 0px;border-radius: 5px;background-color: gray;opacity: 0.5;";
+            mark.style = "position: fixed;right: 19px;top: 3px;color: white;border-width: 0px;border-radius: 5px;background-color: gray;opacity: 0.5;";
             mark.onclick = function() {
                 if(confirm('Do not display HQ mark anymore?')){
-                    localStorage.setItem('vqfft-disablehq', 'true');
+                    localStorage.setItem('vqffb-disablehq', 'true');
                     mark.remove();
                 }
             };
